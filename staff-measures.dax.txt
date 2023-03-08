@@ -1,0 +1,45 @@
+# The Current Staff measure calculates the number of staff currently employed by the company based on the start and termination dates of each employee. It uses the following DAX code:
+
+Current Staff =
+VAR start_date_filter =
+    FILTER (
+        VALUES ( CompanyData[Start_Date] ),
+        CompanyData[Start_Date] <= MAX ( Dates[Date] )
+    )
+
+VAR end_date_filter =
+    FILTER (
+        VALUES ( CompanyData[Termination_Date] ),
+        OR (
+            CompanyData[Termination_Date] >= MIN ( Dates[Date] ),
+            ( ISBLANK ( CompanyData[Termination_Date] ) )
+        )
+    )
+
+RETURN
+CALCULATE (
+    COUNTROWS ( CompanyData ),
+    start_date_filter,
+    end_date_filter
+)
+
+
+
+
+
+
+#The Staff Turnover measure calculates the number of staff who have left the company in a given time period based on their termination date. It uses the following DAX code:
+
+
+Staff Turnover =
+CALCULATE (
+    COUNTROWS ( 'CompanyData' ),
+    FILTER (
+        VALUES ( 'CompanyData'[Termination_Date] ),
+        AND (
+            'CompanyData'[Termination_Date] < MIN ( Dates[Date] ),
+            'CompanyData'[Termination_Date] <> BLANK ()
+        )
+    )
+)
+
