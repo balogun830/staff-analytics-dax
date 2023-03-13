@@ -1,4 +1,7 @@
 # The Current Staff measure calculates the number of staff currently employed by the company based on the start and termination dates of each employee. It uses the following DAX code:
+The "start_date_filter" variable filters the "CompanyData" table to only include rows where the "Start_Date" column is less than or equal to the maximum date in the "Dates" table. This limits the analysis to only include employees who started working before the current date.
+The "end_date_filter" variable filters the "CompanyData" table to only include rows where the "Termination_Date" column is greater than or equal to the minimum date in the "Dates" table, or where the "Termination_Date" column is blank. This ensures that employees who have not yet terminated their employment or whose termination dates are unknown are included in the analysis.
+The "RETURN" statement uses the "CALCULATE" function to count the number of rows in the "CompanyData" table that meet the criteria defined by the "start_date_filter" and "end_date_filter" variables. This count represents the number of employees who are currently employed by the company.
 
 Current Staff =
 VAR start_date_filter =
@@ -28,7 +31,11 @@ CALCULATE (
 
 
 
-#The Staff Turnover measure calculates the number of staff who have left the company in a given time period based on their termination date. It uses the following DAX code:
+#The Staff Turnover measure calculates the number of staff who have left the company in a given time period based on their termination date. It uses the following DAX code:The "CALCULATE" function is used to calculate a measure based on the filtered 'CompanyData' table.
+The "COUNTROWS" function counts the number of rows in the filtered table.
+The "FILTER" function is used to filter the 'CompanyData' table to only include rows where the termination date is less than the minimum date in the 'Dates' table and is not blank.
+The "VALUES" function returns a one-column table that contains all distinct values from the specified column in the current context. In this case, the 'Termination_Date' column is used.
+The "AND" function is used to combine two conditions that must both be true for a row to be included in the filtered table. The first condition checks if the termination date is less than the minimum date in the 'Dates' table. The second condition checks if the termination date is not blank.
 
 
 Staff Turnover =
